@@ -49,15 +49,30 @@ defmodule Day7.Lib do
     # If the item is an integer, it's a file size so just return it
     file_size
   end
+
+  def get_total_size(full_map) do
+    full_map
+    |> Enum.map(fn {_, contents} ->
+      Enum.map(contents, fn item ->
+        if is_integer(item) do
+          item
+        else
+          0
+        end
+      end)
+      |> Enum.sum()
+    end)
+    |> Enum.sum()
+  end
 end
 
 {contents_map, _} = Day7.Lib.get_directories_map("input.txt")
+diff = Day7.Lib.get_total_size(contents_map) - 40_000_000
 
 contents_map
 |> Enum.map(fn {full_path, contents} ->
   {full_path, Day7.Lib.calculate_size(contents, full_path, contents_map)}
 end)
-|> Enum.filter(fn {_, value} -> value <= 100_000 end)
-|> Enum.map(fn {_, value} -> value end)
-|> Enum.sum()
+|> Enum.filter(fn {_, value} -> value >= diff end)
+|> Enum.min_by(fn {_, value} -> value end)
 |> IO.inspect()
