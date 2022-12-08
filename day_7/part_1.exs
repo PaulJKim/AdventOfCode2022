@@ -9,23 +9,23 @@ defmodule Day7.Lib do
           {directory_size_map, [directory | current_directory_stack]}
 
         [_, "cd", ".."] ->
-          [current_directory | rest_of_stack] = current_directory_stack
+          [_current_directory | rest_of_stack] = current_directory_stack
           {directory_size_map, rest_of_stack}
 
         [_, "ls"] ->
-          [current_directory | rest_of_stack] = current_directory_stack
+          [current_directory | _rest_of_stack] = current_directory_stack
           {Map.put(directory_size_map, current_directory, []), current_directory_stack}
 
         ["dir", directory_name] ->
-          [current_directory | rest_of_stack] = current_directory_stack
+          [current_directory | _rest_of_stack] = current_directory_stack
           current_directory_steps = Map.get(directory_size_map, current_directory)
           current_directory_steps = [directory_name | current_directory_steps]
 
           {Map.put(directory_size_map, current_directory, current_directory_steps),
            current_directory_stack}
 
-        [file_size, file_name] ->
-          [current_directory | rest_of_stack] = current_directory_stack
+        [file_size, _file_name] ->
+          [current_directory | _rest_of_stack] = current_directory_stack
           current_directory_steps = Map.get(directory_size_map, current_directory)
           current_directory_steps = [String.to_integer(file_size) | current_directory_steps]
 
@@ -35,7 +35,7 @@ defmodule Day7.Lib do
     end)
   end
 
-  def calculate_size(item, full_map) when is_integer(item) do
+  def calculate_size(item, _full_map) when is_integer(item) do
     item
   end
 
